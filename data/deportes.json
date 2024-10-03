@@ -1,0 +1,22 @@
+[
+    {
+        "id": "1",
+        "nombre": "Natación",
+        "precio": 50000
+    },
+    {
+        "id": "2",
+        "nombre": "Futbol",
+        "precio": 50000
+    },
+    {
+        "id": "93cff880-1c19-4112-b521-33d74bd53e21",
+        "nombre": "nuevo derpote",
+        "precio": 75000
+    },
+    {
+        "id": "dc38d50e-4068-4399-b6ea-3ef44bf73c84",
+        "nombre": "nuevo derpote",
+        "precio": 75000
+    }
+]
