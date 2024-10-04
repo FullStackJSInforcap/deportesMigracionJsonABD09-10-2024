@@ -1,10 +1,5 @@
 [
     {
-        "id": "1",
-        "nombre": "Natación",
-        "precio": 50000
-    },
-    {
         "id": "2",
         "nombre": "Futbol",
         "precio": 50000
@@ -18,5 +13,10 @@
         "id": "dc38d50e-4068-4399-b6ea-3ef44bf73c84",
         "nombre": "nuevo derpote",
         "precio": 75000
+    },
+    {
+        "id": "cf890852-c74b-4576-bf4e-5f139c184dc1",
+        "nombre": "update postman",
+        "precio": "80000"
     }
 ]

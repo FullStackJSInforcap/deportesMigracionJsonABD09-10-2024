@@ -1,6 +1,5 @@
-const { findAll, findById, update, insert, deleteById } = require("./service/deportes");
+const Server = require("./models/server");
 
-deleteById('3').then((datos) => {
-    console.log(datos);
-    
-});
+const server = new Server();
+
+server.listen();
