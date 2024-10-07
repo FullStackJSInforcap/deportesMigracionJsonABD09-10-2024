@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{{> head }}
+
+<body>
+    {{> navbar }}
+    <section>
+        <div class="container mt-3">
+            <form action="/deportes/findById">
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="id" name="id" placeholder="Ingresa el id">
+                </div>
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+        </div>
+    </section>
+    <section>
+        <div class="container mt-3 d-3">
+            <p>{{respuesta.msg}}</p>
+        </div>
+    </section>
+    <section>
+        <div class="container mt-3">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Identificador</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Actualizar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each respuesta.deportes}}
+                    <tr>
+                        <td>{{this.id}}</td>
+                        <td>{{this.nombre}}</td>
+                        <td>{{this.precio}}</td>
+                        <td><a href="/deportes/update?id={{this.id}}"><button class="btn btn-success">Actualizar</button></a></td>
+                        <td><a href="/deportes/deleteById?id={{this.id}}"><button class="btn btn-danger">Eliminar</button></a></td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

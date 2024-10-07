@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+{{> head }}
+
+<body>
+    <section>
+        <div class="container mt-5">
+            <form action="/deportes/update" method="post">
+                <div class="mb-3">
+                    <label for="id" class="form-label">Identificador</label>
+                    <input type="text" class="form-control" id="id" name="id" value="{{respuesta.deportes.id}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" value="{{respuesta.deportes.nombre}}">
+                </div>
+                <div class="mb-3">
+                    <label for="precio" class="form-label">Precio</label>
+                    <input type="text" class="form-control" id="precio" name="precio"value="{{respuesta.deportes.precio}}">
+                </div>
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+            </form>
+        </div>
+    </section>
+</body>
+
+</html>

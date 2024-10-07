@@ -1,4 +1,5 @@
 const express = require('express');
+const hbs = require('hbs');
 
 class Server {
 
@@ -10,7 +11,9 @@ class Server {
     }
 
     middlewares() {
+        this._app.set('view engine', 'hbs');
         this._app.use(express.urlencoded({ extended: true }));
+        hbs.registerPartials(__dirname.slice(0, -7) + '/views/partials');
     }
 
     routes() {
@@ -19,7 +22,7 @@ class Server {
 
     listen() {
         this._app.listen(this._port, () => {
-            console.log(`Escuchando en el puerto ${this._port}`);
+            console.log(`Escuchando en el puerto ${this._port}`);            
         });
     }
 
