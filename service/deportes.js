@@ -1,11 +1,14 @@
-const fs = require('node:fs/promises');
 const { v4: uuidv4 } = require('uuid');
+const conexion = require('../data/conexion');
 
 const findAll = async () => {
     try {
-        const datos = await fs.readFile('./data/deportes.json', { encoding: 'utf8' });
-        const deportes = JSON.parse(datos);
-        if (deportes.length == 0) {
+        const clientBD = conexion();
+        await clientBD.connect();
+        const datos = await clientBD.query('SELECT * FROM deportes');
+        const deportes = datos.rows;
+        // if (deportes.length == 0) {
+        if (datos.rowCount == 0) {
             return {
                 msg: `No hay deportes`,
                 deportes
@@ -27,20 +30,23 @@ const findAll = async () => {
 
 const findById = async (id) => {
     try {
-        const datos = await fs.readFile('./data/deportes.json', { encoding: 'utf8' });
-        const deportes = JSON.parse(datos);
-        const deporteFiltrado = deportes.filter((deporteTemporal) => {
-            return deporteTemporal.id == id;
-        });
-        if (deporteFiltrado.length == 0) {
+
+        const clientBD = conexion();
+        await clientBD.connect();
+        const query = {
+            text: 'SELECT * FROM deportes WHERE id = $1',
+            values: [id]
+        }
+        const datos = await clientBD.query(query);
+        if (datos.rowCount == 0) {
             return {
                 msg: `El deporte con id ${id} no existe`,
-                deportes
+                deportes: datos.rows
             }
         }
         return {
             msg: `El deporte con id ${id} es:`,
-            deportes: deporteFiltrado
+            deportes: datos.rows
         }
     } catch (error) {
         console.log(error);
@@ -54,17 +60,23 @@ const findById = async (id) => {
 const insert = async (nombre, precio) => {
     try {
         const id = uuidv4();
-        const datos = await fs.readFile('./data/deportes.json', { encoding: 'utf8' });
-        const deportes = JSON.parse(datos);
-        deportes.push({
-            id,
-            nombre,
-            precio
-        });
-        fs.writeFile('./data/deportes.json', JSON.stringify(deportes));
+        const clientBD = conexion();
+        await clientBD.connect();
+        const query = {
+            text: 'INSERT INTO deportes(id, nombre, precio) VALUES($1, $2, $3)',
+            values: [id, nombre, precio]
+        }
+        const respuestaInsert = await clientBD.query(query);
+        const datos = await clientBD.query('SELECT * FROM deportes');
+        if (respuestaInsert.rowCount == 0) {
+            return {
+                msg: `Deporte no insertado`,
+                deportes: datos.rows
+            }
+        }
         return {
             msg: `Deporte insertado correctamente`,
-            deportes
+            deportes: datos.rows
         }
     } catch (error) {
         console.log(error);
@@ -78,27 +90,23 @@ const insert = async (nombre, precio) => {
 
 const update = async (id, nombre, precio) => {
     try {
-        const datos = await fs.readFile('./data/deportes.json', { encoding: 'utf8' });
-        const deportes = JSON.parse(datos);
-        const deporteActualizar = deportes.find((deporteTemporal) => {
-            return deporteTemporal.id == id;
-        });
-        if (deporteActualizar) {
-            if (nombre) {
-                deporteActualizar.nombre = nombre;
-            }
-            if (precio) {
-                deporteActualizar.precio = precio;
-            }
-            fs.writeFile('./data/deportes.json', JSON.stringify(deportes));
+        const clientBD = conexion();
+        await clientBD.connect();
+        const query = {
+            text: 'UPDATE deportes SET nombre = $1, precio = $2 WHERE id = $3',
+            values: [nombre, precio, id]
+        }
+        const respuestaUpdate = await clientBD.query(query);
+        const datos = await clientBD.query('SELECT * FROM deportes');
+        if(respuestaUpdate.rowCount == 0){
             return {
-                msg: `El deporte con id ${id} se actualizó`,
-                deportes
-            }
+                msg: `El deporte con id ${id} no se actualizó`,
+                deportes: datos.rows
+            }    
         }
         return {
-            msg: `El deporte con id ${id} no existe para actualizar`,
-            deportes
+            msg: `El deporte con id ${id} se actualizó correctamente`,
+            deportes: datos.rows
         }
     } catch (error) {
         console.log(error);
@@ -111,24 +119,23 @@ const update = async (id, nombre, precio) => {
 
 const deleteById = async (id) => {
     try {
-        const datos = await fs.readFile('./data/deportes.json', { encoding: 'utf8' });
-        const deportes = JSON.parse(datos);
-        const deporteFiltrado = deportes.filter((deporteTemporal) => {
-            return deporteTemporal.id == id;
-        });
-        if (deporteFiltrado.length == 0) {
+        const clientBD = conexion();
+        await clientBD.connect();
+        const query = {
+            text: 'DELETE FROM deportes WHERE id = $1',
+            values: [id]
+        }
+        const respuestaDelete = await clientBD.query(query);
+        const datos = await clientBD.query('SELECT * FROM deportes');
+        if(respuestaDelete.rowCount == 0){
             return {
-                msg: `El deporte con id ${id} no existe`,
-                deportes
+                msg: `El deporte con id ${id} no se eliminó`,
+                deportes: datos.rows
             }
         }
-        const deportesNuevos = deportes.filter((deporteTemporal) => {
-            return deporteTemporal.id != id;
-        });
-        fs.writeFile('./data/deportes.json', JSON.stringify(deportesNuevos));
         return {
             msg: `El deporte con id ${id} se eliminó correctamente`,
-            deportes: deportesNuevos
+            deportes: datos.rows
         }
     } catch (error) {
         console.log(error);
